@@ -15,4 +15,5 @@ if __name__ == '__main__':
     folder_entries = map(lambda x: os.path.join(messages_path, x), dir_names)
     chat_dirs = list(filter(lambda x: os.path.isdir(x), folder_entries))
 
+    print(f'Found {len(chat_dirs)} chats.')
     get_attachments(chat_dirs)

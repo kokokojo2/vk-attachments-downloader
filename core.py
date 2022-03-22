@@ -4,6 +4,7 @@ import imghdr
 import codecs
 from bs4 import BeautifulSoup
 from urllib import parse
+from halo import Halo
 
 
 def get_contents_bs4(filename):
@@ -33,6 +34,11 @@ def get_media_links(bs4_chat, only_public=False):
     yield from links
 
 
+def get_chat_name(chat_id, root_path):
+    soup = get_contents_bs4(os.path.join(root_path, 'index-messages.html'))
+    return soup.find('a', {'href': f'{chat_id}/messages0.html'}).text
+
+
 def get_filename_from_url(url):
     return parse.urlparse(url).path.split('/')[-1]
 
@@ -58,6 +64,12 @@ def get_chat_attachments(chat_path, save_path=None):
     if not os.path.exists(chat_path):
         raise ValueError(f'Specified path({chat_path}) does not exist.')
 
+    base_message = \
+        f'Downloading attachments for "{get_chat_name(os.path.basename(chat_path), os.path.dirname(chat_path))}"'
+    attachment_counter = 0
+    spinner = Halo(text=base_message, spinner='dots')
+    spinner.start()
+
     for file in os.listdir(chat_path):
         if file.endswith('.html'):
             file_path = os.path.join(chat_path, file)
@@ -67,7 +79,12 @@ def get_chat_attachments(chat_path, save_path=None):
                 attachment_path = get_attachment(clean_url(link['href']), filepath=save_path)
                 append_attachment_local(messages_soup, link, attachment_path)
 
+                attachment_counter += 1
+                spinner.text = base_message + f' | {attachment_counter} {"items" if attachment_counter != 1 else "item"}'
+
             save_contents_bs4(file_path, messages_soup)
+
+    spinner.succeed()
 
 
 def append_attachment_local(soup_obj, attachment_div, attachment_path):
