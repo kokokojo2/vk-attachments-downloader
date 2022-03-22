@@ -7,6 +7,13 @@ from urllib import parse
 from halo import Halo
 
 
+def get_or_rise_exc(item, func, exception_text):
+    result = func(item)
+    if not result:
+        raise ValueError(exception_text)
+    return result
+
+
 def get_contents_bs4(filename):
     with codecs.open(filename, 'rb') as f:
         return BeautifulSoup(f, 'lxml')
@@ -39,6 +46,15 @@ def get_chat_name(chat_id, root_path):
     return soup.find('a', {'href': f'{chat_id}/messages0.html'}).text
 
 
+def get_chat_id(chat_name, root_path):
+    soup = get_contents_bs4(os.path.join(root_path, 'index-messages.html'))
+    chat_info = soup.find('a', text=chat_name)
+    if chat_info:
+        return os.path.dirname(chat_info['href'])
+
+    raise ValueError(f'Chat with name "{chat_name}" not found.')
+
+
 def get_filename_from_url(url):
     return parse.urlparse(url).path.split('/')[-1]
 
@@ -67,7 +83,7 @@ def get_chat_attachments(chat_path, save_path=None):
     base_message = \
         f'Downloading attachments for "{get_chat_name(os.path.basename(chat_path), os.path.dirname(chat_path))}"'
     attachment_counter = 0
-    spinner = Halo(text=base_message, spinner='dots')
+    spinner = Halo(text=base_message + ' | 0 items', spinner='dots')
     spinner.start()
 
     for file in os.listdir(chat_path):

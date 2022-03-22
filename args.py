@@ -11,10 +11,20 @@ arg_parser.add_argument(
 )
 
 arg_parser.add_argument(
+    '-i',
+    '--ids',
+    type=str,
+    nargs='+',
+    default=[],
+    help='particular chat ids to download attachments from (omit to download everything)'
+)
+
+arg_parser.add_argument(
     '-c',
     '--chats',
     type=str,
     nargs='+',
-    help='particular chat ids to download attachments from (omit to download everything)'
+    default=[],
+    help='particular chat names to download attachments from (omit to download everything)'
 )
 
