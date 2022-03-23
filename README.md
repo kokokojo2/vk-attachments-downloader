@@ -6,7 +6,7 @@ However, this archive includes only links to mediafiles that are present in a ch
 
 Clone the repo:
 
-`git clone `
+`git clone https://github.com/kokokojo2/vk-attachments-downloader`
 
 Install requirements:
 
@@ -16,8 +16,8 @@ Make sure to unpack your archive before usage.
 
 Basic usage:
 
-`python main.py path/to/your/arhive`
+`python downloader.py path/to/your/arhive`
 
 You can also specify the chat names or ids to download only their attachments:
 
-`python main.py path/to/your/arhive --ids -1231443 200043243 --chats "My nice chat" "Doir Jhon"`
+`python downloader.py path/to/your/arhive --ids -1231443 200043243 --chats "My nice chat" "Doir Jhon"`
