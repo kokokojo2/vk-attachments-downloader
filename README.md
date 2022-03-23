@@ -8,6 +8,8 @@ Clone the repo:
 
 `git clone https://github.com/kokokojo2/vk-attachments-downloader`
 
+`cd vk-attachments-downloader`
+
 Install requirements:
 
 `pip install -r requirements.txt`
