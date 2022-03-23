@@ -9,7 +9,8 @@ from halo import Halo
 
 def get_or_rise_exc(item, func, exception_text):
     result = func(item)
-    if not result:
+
+    if not result and not os.path.exists(item):
         raise ValueError(exception_text)
     return result
 
